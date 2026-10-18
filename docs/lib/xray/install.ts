@@ -1,5 +1,7 @@
 // Pure builders for 3x-ui install commands (script + Docker). No React/DOM.
 
+import { productRepo } from '../shared';
+
 export type InstallMethod = 'script' | 'docker';
 
 export interface InstallOptions {
@@ -11,7 +13,7 @@ export interface InstallOptions {
   webBasePath: string;
 }
 
-const REPO_RAW = 'https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh';
+const REPO_RAW = `https://raw.githubusercontent.com/${productRepo.user}/${productRepo.repo}/${productRepo.branch}/install.sh`;
 const IMAGE = 'ghcr.io/mhsanaei/3x-ui:latest';
 
 function isLatest(version: string): boolean {
@@ -20,9 +22,8 @@ function isLatest(version: string): boolean {
 }
 
 /**
- * The one-line script install command. The master install script reads the
- * version as its first argument: empty = latest stable release, a tag like
- * `v3.4.0` = that release, and `dev-latest` = the rolling per-commit dev build.
+ * install.sh reads the version argument: empty = latest stable release,
+ * a tag such as `v3.4.0` = that release, `dev-latest` = the rolling dev build.
  */
 export function buildScriptCommand(options: InstallOptions): string {
   if (isLatest(options.version)) {

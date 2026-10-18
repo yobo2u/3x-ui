@@ -1,0 +1,49 @@
+name: Sync upstream release
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Select an unsynced stable release
+        id: select
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPSTREAM_REPO: MHSanaei/3x-ui
+        run: |
+          tag="$(./scripts/upstream-sync.sh)"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          if [ -z "$tag" ]; then
+            echo "No unsynced stable release. Not opening a PR."
+          else
+            echo "Selected ${tag}"
+          fi
+      - name: Merge release and open a draft PR
+        if: steps.select.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPSTREAM_REPO: MHSanaei/3x-ui
+          BASE_BRANCH: main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          ./scripts/open-upstream-sync-pr.sh "${{ steps.select.outputs.tag }}"
