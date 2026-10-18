@@ -32,7 +32,7 @@ fi
 forbidden=$(mktemp)
 trap 'rm -f "$forbidden"' EXIT
 found=0
-if git grep -n -E 'donate\.sanaei\.dev|t\.me/XrayUI|MHSanaei/sponsors' -- . >"$forbidden"; then
+if git grep -n -E 'donate\.sanaei\.dev|t\.me/XrayUI|MHSanaei/sponsors|ghcr\.io/mhsanaei/3x-ui|hsanaeii/3x-ui' -- . >"$forbidden"; then
   found=1
 fi
 for f in install.sh update.sh x-ui.sh internal/web/service/panel/panel.go docs/lib/shared.ts docs/lib/xray/install.ts frontend/src/layouts/AppSidebar.tsx; do

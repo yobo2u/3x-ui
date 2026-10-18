@@ -1,5 +1,7 @@
 services:
   3xui:
+    # `docker compose pull` updates this image. `build` still compiles this repo.
+    image: ghcr.io/yobo2u/3x-ui:latest
     build:
       context: .
       dockerfile: ./Dockerfile
