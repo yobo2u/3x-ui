@@ -14,7 +14,7 @@ export interface InstallOptions {
 }
 
 const REPO_RAW = `https://raw.githubusercontent.com/${productRepo.user}/${productRepo.repo}/${productRepo.branch}/install.sh`;
-const IMAGE = 'ghcr.io/mhsanaei/3x-ui:latest';
+const IMAGE = `ghcr.io/${productRepo.user}/${productRepo.repo}:latest`;
 
 function isLatest(version: string): boolean {
   const v = version.trim().toLowerCase();
