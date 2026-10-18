@@ -1,21 +1,27 @@
 import Link from 'next/link';
-import { ArrowRight, BookOpen, Heart } from 'lucide-react';
-import { GitHubIcon, TelegramIcon } from '@/components/icons';
+import { ArrowRight, BookOpen } from 'lucide-react';
+import { GitHubIcon } from '@/components/icons';
 import { Logo } from '@/components/logo';
 import { Features } from '@/components/home/features';
 import { GitHubStatsRow } from '@/components/home/github-stats';
 import { InstallCommand } from '@/components/home/install-command';
 import { getGitHubStats } from '@/lib/github-stats';
 import { i18n } from '@/lib/i18n';
-import { appName, productRepoUrl, deepWikiUrl, telegramChannelUrl, donateUrl } from '@/lib/shared';
+import { appName, productRepoUrl, deepWikiUrl } from '@/lib/shared';
+import { buildScriptCommand } from '@/lib/xray/install';
 import { getSiteMessages, type SiteMessages } from '@/lib/site-i18n';
 
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }));
 }
 
-const INSTALL_COMMAND =
-  'bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)';
+const INSTALL_COMMAND = buildScriptCommand({
+  method: 'script',
+  version: '',
+  enableFail2ban: false,
+  panelPort: '',
+  webBasePath: '',
+});
 
 export default async function HomePage({ params }: PageProps<'/[lang]'>) {
   const { lang } = await params;
@@ -117,24 +123,6 @@ function Footer({ prefix, m }: { prefix: string; m: SiteMessages }) {
           >
             <BookOpen className="size-4" />
             DeepWiki
-          </a>
-          <a
-            href={telegramChannelUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 hover:text-fd-foreground"
-          >
-            <TelegramIcon className="size-4" />
-            Telegram
-          </a>
-          <a
-            href={donateUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 hover:text-fd-foreground"
-          >
-            <Heart className="size-4" />
-            {m.donate}
           </a>
         </nav>
       </div>
