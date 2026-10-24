@@ -24,7 +24,7 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-      - name: Select an unsynced stable release
+      - name: Select the latest unsynced stable release
         id: select
         env:
           GH_TOKEN: ${{ github.token }}
