@@ -19,18 +19,17 @@ func SyncBranch(tag string) string {
 	return "sync/upstream-" + tag
 }
 
-// SelectUnsynced returns the oldest stable release missing from fork history.
-// releases is newest-first. An older open sync branch blocks a newer PR.
+// SelectUnsynced returns the latest stable release that still needs a sync PR.
+// releases is newest-first; a current ancestor or existing sync branch means none.
 func SelectUnsynced(releases []Release, ancestor func(commit string) bool, branchExists func(branch string) bool) (string, bool) {
-	for i := len(releases) - 1; i >= 0; i-- {
-		rel := releases[i]
-		if rel.Draft || rel.Prerelease || rel.Commit == "" || !stableTag.MatchString(rel.Tag) {
+	for _, rel := range releases {
+		if rel.Draft || rel.Prerelease || !stableTag.MatchString(rel.Tag) {
 			continue
 		}
-		if ancestor(rel.Commit) {
-			continue
+		if rel.Commit == "" {
+			return "", false
 		}
-		if branchExists(SyncBranch(rel.Tag)) {
+		if ancestor(rel.Commit) || branchExists(SyncBranch(rel.Tag)) {
 			return "", false
 		}
 		return rel.Tag, true

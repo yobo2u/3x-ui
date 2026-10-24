@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Print one unsynced stable upstream tag, or nothing. Never opens a PR.
+# Print the latest unsynced stable upstream tag, or nothing. Never opens a PR.
 set -euo pipefail
 
 upstream="${UPSTREAM_REPO:-MHSanaei/3x-ui}"
