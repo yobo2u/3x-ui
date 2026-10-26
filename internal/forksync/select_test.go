@@ -69,6 +69,19 @@ func TestSelectUnsyncedDoesNotWaitOnOlderSyncBranch(t *testing.T) {
 	}
 }
 
+func TestSelectUnsyncedPicksLatestStableBehindDraftNotRewrittenTag(t *testing.T) {
+	releases := []Release{
+		{Tag: "v3.12.0", Commit: "draft", Draft: true},
+		{Tag: "v3.12.0-rc.1", Commit: "rc", Prerelease: true},
+		{Tag: "v3.11.0", Commit: "stable"},
+		{Tag: "v1.7.6", Commit: "rewritten"},
+	}
+	tag, ok := SelectUnsynced(releases, func(string) bool { return false }, func(string) bool { return false })
+	if !ok || tag != "v3.11.0" {
+		t.Fatalf("selected %q ok=%v, want v3.11.0; a newer draft must not hide it and v1.7.6 must not be chosen", tag, ok)
+	}
+}
+
 func TestSelectUnsyncedIgnoresDraftsPrereleasesAndNonStableTags(t *testing.T) {
 	releases := []Release{
 		{Tag: "dev-latest", Commit: "rolling", Prerelease: true},
