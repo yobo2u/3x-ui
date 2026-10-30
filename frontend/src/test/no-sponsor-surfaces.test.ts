@@ -15,6 +15,7 @@ describe('paid sponsor and donate surfaces', () => {
     'pages/index/IndexPage.tsx',
     'layouts/AppSidebar.tsx',
     'routes.tsx',
+    'routes/panelRoutes.tsx',
     'components/command-palette/CommandPalette.tsx',
   ];
 
