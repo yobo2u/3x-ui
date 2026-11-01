@@ -5,6 +5,9 @@ permissions:
   packages: write
 
 on:
+  schedule:
+    # Monday 07:17 UTC. Schedule ref is the default branch, which enables the latest tag.
+    - cron: "17 7 * * 1"
   workflow_dispatch:
   push:
     tags:
